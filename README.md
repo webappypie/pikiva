@@ -1,8 +1,9 @@
 # Pikiva
 
 Private photo curation and template-driven memories for Android and iOS.
-**Current scope: Phase 0 — Repository & architecture.** Photo import, analysis,
-creation, and the premium product UI have not been implemented.
+**Current scope: Phase 1 — Premium UI shell.** Onboarding, four-tab navigation,
+sample results/style previews and saved theme preferences work offline.
+Real photo selection, analysis, editing and export remain future phases.
 
 ## Source of truth
 
@@ -15,7 +16,7 @@ creation, and the premium product UI have not been implemented.
 
 The owner's explicit one-phase instruction supersedes older combined Phase 0/1
 examples in the original documents. Those documents are preserved unchanged.
-Do not start Phase 1 without a new instruction.
+Phase 1 was explicitly authorized. Do not start Phase 2 without a new instruction.
 
 ## Toolchain
 
@@ -38,9 +39,10 @@ flutter gen-l10n
 flutter run --dart-define-from-file=config/development.json
 ```
 
-A device/emulator must be connected. The foundation starts locally, requests no
-media access, and provides a licenses route. It respects the system theme and
-text size. There is intentionally no fake photo picker or creation action.
+A device/emulator must be connected. First launch shows the value/privacy welcome.
+Home, Creations, Sessions and Settings use offline sample content, saved theme
+choices, accessible layouts and honest unavailable-feature explanations. No media
+permission is requested. Only onboarding/theme choices persist between launches.
 
 `config/development.json` and `config/production.json` contain **public build
 values only**. Omitted `APP_ENV` defaults to production. Invalid values fail
@@ -51,7 +53,7 @@ change the native application identifier or enable cloud services.
 ## Check
 
 ```sh
-dart format --output=none --set-exit-if-changed lib/app lib/core lib/main.dart test integration_test
+dart format --output=none --set-exit-if-changed lib/app lib/core lib/features lib/main.dart test integration_test
 flutter analyze --fatal-infos
 flutter test --coverage
 flutter build apk --debug --dart-define-from-file=config/development.json
@@ -72,20 +74,26 @@ device; they are not silently treated as covered by widget tests.
 Generated localization, local SDK paths, coverage, emulator data, signing files,
 private configuration, and build artifacts are ignored. Commit `pubspec.lock`.
 Android release signing is deliberately unconfigured; no production credentials
-are needed in Phase 0. Default Flutter launcher/launch assets remain until the
-branding/UI phase. This foundation is not a store-ready application.
+are needed in Phase 1. Default Flutter launcher/launch assets remain until the
+final branding/export preparation. This foundation is not a store-ready application.
 
 ## Privacy boundaries
 
-- No runtime networking, telemetry, cloud SDKs, media permissions, or user data.
+- No runtime networking, telemetry, cloud SDKs, media permissions, or user photos.
 - Core photo processing will stay on-device; originals must be preserved.
 - Review Bin will be reversible staging before explicit OS-confirmed deletion.
 - Templates will drive creations; no generative image/video service.
 - Optional cloud text later uses a secure backend, never a secret in the app.
 - Firebase later supports configuration/diagnostics, not photo storage.
 
+## Phase 1 evidence
+
+- [Plan and acceptance criteria](docs/PHASE_1_PLAN.md)
+- [Completion report](docs/PHASE_1_REPORT.md)
+- [Sample asset provenance and generation prompts](docs/SAMPLE_ASSETS.md)
+
 ## Next phase
 
-**Phase 1 — Premium UI shell**, only after explicit authorization: splash,
-onboarding, Home/Creations/Sessions/Settings navigation, mock results, responsive
-layouts, theme UX, and animation primitives. Do not implement it as part of Phase 0.
+**Phase 2 — Photo selection/session**, only after explicit authorization: system
+picker, selected-photo preview, session creation, thumbnails, local persistence,
+and permission/limited-access UX. No Phase 2 work is included here.

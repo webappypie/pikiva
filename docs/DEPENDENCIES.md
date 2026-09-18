@@ -37,3 +37,22 @@ No full application state package is necessary for the current scope. No
 FFmpeg, image-analysis, gallery, Firebase, or AI dependency is selected. At the
 actual integration phase, repeat maintenance, Android/iOS, license, codec,
 binary-size, and store compatibility reviews against concrete requirements.
+
+## Phase 1 addition
+
+`shared_preferences` **2.5.5**, Flutter publisher, BSD-3-Clause. Chosen for two
+non-critical UI preferences only (welcome completion and theme), through the
+recommended async API. No session or media data belongs here. Publisher states
+Android 24+/iOS 13+; existing targets Android 24+/iOS 15+ satisfy those floors.
+Resolved mobile adapters: Android 2.4.28, foundation 2.5.7; both BSD-3-Clause.
+Package and mobile-adapter LICENSE files were inspected locally. Federated
+platform adapters and their path/FFI helpers enter the lockfile transitively;
+no desktop/web platform host was added. Runtime notices remain in LicensePage.
+No package was removed. No media/FFmpeg/codec dependency was selected.
+
+Primary sources reviewed:
+- https://pub.dev/packages/shared_preferences
+- https://pub.dev/packages/shared_preferences/license
+
+The publisher explicitly warns that storage is not for critical data. Native
+write failures are handled, and local-session persistence remains Phase 2.

@@ -2,64 +2,68 @@
 
 ## Scope and decisions
 
-Phase 0 establishes a small composition root and cross-platform foundation.
-Product behavior is specified by `docs/MASTER_PRD.md`; the current user request
-limits implementation to section 36, Phase 0. No future service is represented
-by a fake implementation and no product flow is claimed complete.
+Phase 1 adds the premium UI shell specified by MASTER_PRD section 36. Phase 0
+configuration/privacy/platform boundaries remain intact. No real media session,
+analysis, template engine, render service or cloud integration is implemented.
 
 ```text
 lib/
-  main.dart                  binding initialization and immutable build config
+  main.dart                 binding initialization and public build config
   app/
-    pikiva_app.dart           composition root and router lifecycle
-    routing/                 paths, nested navigation, safe route-error recovery
-    view/                    foundation screen and route fallback only
+    pikiva_app.dart         composition root, adapter/controller/router ownership
+    shell_controller.dart  UI preference and ephemeral sample state
+    routing/                startup redirect, four stateful branches, detail routes
+    view/                   adaptive shell and safe route-error recovery
   core/
-    config/                  validated, public local configuration
-    design/                  tokens, themes, accessible reading layout
-  l10n/                      English ARB; generated output is ignored
-  features/                  documented boundary; implementations by phase
-  services/                  documented boundary; adapters by phase
-config/                      public development and production definitions
-test/                        config and app/widget behavior checks
-integration_test/            native cold-launch/navigation smoke test
-android/, ios/               Flutter-generated platform hosts
-.github/workflows/           version-pinned quality baseline
+    config/                 immutable non-secret configuration
+    design/                 tokens, themes, responsive cards, state transitions
+    storage/                UI-only preference adapter
+  features/
+    onboarding/             value/privacy welcome, startup loading/retry
+    home/                   photo-led home and sample entry points
+    sessions/               empty and sample collection views
+    samples/                validated bundled fixtures, mock results/detail
+    creations/              static Profile/Cover/Collage/Reels previews
+    settings/               theme, privacy, help, licenses, sample reset
+  l10n/                     English ARB; generated output ignored
+assets/samples/             two fictional photographs and authored fixture JSON
 ```
 
-`app` composes UI and dependencies. Features own presentation and domain
-behavior. `core` contains shared policies/primitives, not unrelated business
-logic. `services` will wrap external SDKs and native APIs. Presentation must not
-call platform media or cloud plugins. Domain calculations should be pure Dart
-unless a native computation adapter is necessary. Dependencies are injected at
-the composition root; avoid global service locators and hidden singletons.
+`PikivaApp` injects `UiPreferenceStore` and `SampleRepository` into a small
+ChangeNotifier controller. Features never call the platform preferences plugin.
+No global service locator or extra state package is needed for this scope.
+Caller-injected controllers/routers remain caller-owned. Defaults are disposed
+by the app. Async sample/startup generations reject stale completions after
+clear, fallback or disposal. Repository output is immutable and local-only.
 
-Use Flutter's built-in local widget state and explicit constructor injection
-for the foundation. No state-management package is justified yet. If later
-long-running cross-screen work requires one, document one consistent choice;
-job lifecycle must be independent of an individual screen.
+Only the non-sensitive welcome flag and system/light/dark choice persist through
+SharedPreferencesAsync. Await writes before reporting success; failure preserves
+the prior value and supports retry. Startup/onboarding also support an explicit
+session-only fallback. Preferences are not suitable for critical session data.
+Sample choices remain in memory, reset after restart, and never touch a library.
 
 ## Routing and presentation
 
-`go_router` implements `/` and nested `/licenses` with a real parent back stack.
-Unknown routes produce a generic recovery screen; incoming paths/query strings
-are neither displayed nor logged. No four-tab UI exists before Phase 1.
-The app owns/disposes its default router; a test-injected router remains owned
-by its caller. The router remains stable through theme rebuilds.
+The root `/` displays actual preference loading (no artificial delay). First
+launch redirects to `/welcome`; completion enters `/home`. Incoming deep links
+are retained in memory across startup/welcome and are never logged or displayed.
+Stateful branches `/home`, `/creations`, `/sessions`, `/settings` retain tab
+state and scroll positions. Nested sample/detail/style/licenses routes provide
+parent back destinations. Unknown routes use generic recovery copy. The old
+`/licenses` path redirects to `/settings/licenses`.
 
-Central tokens define spacing, radii, colors, type, elevation, icon sizes,
-timing, and easing. Material 3 supplies platform interaction behavior. Light,
-dark, and system modes are supported at the app boundary. The default is system;
-persistence and the Settings control belong to later product implementation.
-A bounded, scrollable SafeArea layout accommodates small displays, rotation,
-and large text without clamping the system's accessibility scaling. Theme
-transitions honor reduced motion. English ARB strings establish localization.
-Platform fonts avoid network font loading and extra font licensing/binary cost.
+Navigation uses a bottom bar on phones, rail at 840 logical pixels and above,
+and a wrapping two-column control layout for large text. Pages are scrollable
+with bounded widths; cards use natural heights. No accessibility text scaling
+is suppressed. Light/dark/system choices, semantic headings, padded targets,
+localized copy and reduced-motion-aware state/theme transitions are shared.
+System platform fonts and local imagery require no network fetches.
 
-Startup is synchronous with no I/O, so artificial loading, progress, and success
-states would misrepresent behavior. The foundation explicitly communicates
-unavailable photo tools. A route error has an actionable recovery. Feature
-loading/empty/error/success states are required when those features arrive.
+Sample loading has explicit empty/loading/error/retry/ready states. Photo results
+are clearly labeled authored examples. Static style previews are UI art direction,
+not parsed templates or playable/exportable video. Choose Photos explains that
+selection is unavailable and offers the sample. Clear Sample confirms an in-memory
+reset, never deletion of source images or bundled files.
 
 ## Configuration and privacy
 
@@ -67,7 +71,7 @@ Public build definitions select `development` or `production`; absent values
 select production, and misspellings fail validation. Both environments keep
 cloud text and telemetry disabled. No endpoints, credentials, or provider
 selection exist. `AppConfig` is injected into the composition root for future
-service composition; the UI does not need to consume it in Phase 0.
+service composition; the UI does not need to consume it in Phase 1.
 
 Native flavors are not needed with one offline binary identity. Add separate
 native configurations at Firebase integration if required. Never interpret

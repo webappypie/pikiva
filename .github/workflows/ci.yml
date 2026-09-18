@@ -28,7 +28,7 @@ jobs:
           cache: true
       - run: flutter pub get --enforce-lockfile
       - run: flutter gen-l10n
-      - run: dart format --output=none --set-exit-if-changed lib/app lib/core lib/main.dart test integration_test
+      - run: dart format --output=none --set-exit-if-changed lib/app lib/core lib/features lib/main.dart test integration_test
       - run: flutter analyze --fatal-infos
       - run: flutter test --coverage
       - run: flutter build apk --debug --dart-define-from-file=config/development.json

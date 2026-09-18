@@ -1,7 +1,7 @@
 # Feature boundary
 
-Product features start in their assigned PRD phase. Phase 0 does not implement
-onboarding, home, sessions, creations, settings, or mock result screens.
+Phase 1 implements onboarding, Home, Sessions, Creations, Settings, and authored
+sample result screens. Real photo selection and session storage begin in Phase 2.
 
 Add one feature directory as it becomes necessary, with presentation, domain,
 and data boundaries only where they have responsibilities. Presentation may use
