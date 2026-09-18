@@ -61,10 +61,11 @@ checked. No package removed from an existing implementation. See DEPENDENCIES.md
 | Android debug APK build with development config | Passed |
 | `flutter test integration_test/app_smoke_test.dart -d emulator-5580` | Passed; 1 native test on API 36 |
 | Manual Android offline/light/dark smoke | Passed; successful cold launch in airplane mode, light/dark screenshots inspected, licenses and Android back navigation verified |
-| iOS compile/device smoke | Not run locally; Windows host; macOS CI job provided |
+| iOS simulator compile | Passed on macOS GitHub Actions; iOS runtime/device smoke remains unrun |
 | APK permissions inspection | No media/storage permissions; debug tooling Internet permission only, plus app-scoped receiver permission |
 | Staged diff, whitespace, credential-pattern and artifact checks | Passed; no secrets/local SDK files/build outputs staged |
 | Original documents compared to baseline | Unchanged |
+| GitHub Actions | Android quality gates/debug build and iOS simulator build both passed for source commit 0bb28869768466eb51c05ecb6f77bb11df11be8b |
 
 Initial widget-test failures were test-harness scrolling/semantics cleanup
 issues; both were fixed before the passing run. The emulator's default graphics
@@ -73,7 +74,7 @@ The first manual capture showed an emulator System UI timeout dialog. After dism
 
 ## 8. Limitations and risks
 
-- iOS compilation/runtime and hosted CI results are not implied by local passes.
+- iOS compilation passed in hosted CI; iOS runtime and physical-device behavior remain unverified.
 - Physical Android/iPhone accessibility and performance checks remain needed.
 - Final branding/launcher art, application IDs, and OS support policy remain
   owner decisions. Current floors are Android 24 and iOS 15.
@@ -88,14 +89,21 @@ The first manual capture showed an emulator System UI timeout dialog. After dism
 
 ## 9. Manual verification still needed
 
-Review native iOS CI/build on a Mac and run the documented integration test on
+Run the documented native integration test on a Mac with
 an iOS simulator/iPhone. Verify VoiceOver/TalkBack with a human, physical-device
 large text/rotation/system theme, and confirm branding/IDs before registration.
-Review the GitHub Actions run after push; no unobserved CI result is reported
-as passed.
+Hosted CI was observed passing: https://github.com/webappypie/pikiva/actions/runs/35358649127.
+The final report-only commit does not change the verified application source.
 
 ## 10. Exact next phase
 
 **Phase 1 — Premium UI shell**: splash, onboarding, home, sessions, creations,
 settings, mock result screens, dark/light, responsive layout, animation
 primitives. Await a separate explicit owner instruction before starting.
+
+## Git delivery
+
+The original documents are preserved in baseline commit d2c2f97. Phase 0 source
+was committed as 0bb2886 and pushed to origin/main. The completion report was
+then updated with observed CI results. No build artifacts or secrets are tracked.
+The task-owned emulator was stopped after verification.
