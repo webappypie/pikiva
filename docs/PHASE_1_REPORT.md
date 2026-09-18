@@ -93,7 +93,9 @@ package was added.
   not a release download-size measurement.
 - Android native offline smoke: 1 test passed, covering first launch, sample
   result/detail flow, preference persistence, theme changes, licenses, and back.
-- Hosted Android/iOS CI: pending on the Phase 1 source commit.
+- Hosted CI: Android quality gates/debug APK and iOS simulator compilation both
+  passed for source commit 25c66e0 in GitHub Actions run 35391062480:
+  https://github.com/webappypie/pikiva/actions/runs/35391062480
 
 ## 8. Known limitations or risks
 
