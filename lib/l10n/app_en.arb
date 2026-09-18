@@ -1,0 +1,12 @@
+{
+  "@@locale": "en",
+  "appName": "Pikiva",
+  "foundationTitle": "Make room for your best memories.",
+  "foundationDescription": "Choose the photos worth keeping and turn them into something worth sharing.",
+  "foundationAvailability": "Photo tools are not available in this build.",
+  "privacyNote": "Your photos stay yours. Nothing is accessed, uploaded, or deleted in this build.",
+  "licensesLabel": "Open-source licenses",
+  "routeErrorTitle": "This page is unavailable",
+  "routeErrorDescription": "Your photos are safe. Return to the start to continue.",
+  "returnToStart": "Return to start"
+}
